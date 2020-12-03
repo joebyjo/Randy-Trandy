@@ -1,10 +1,9 @@
 # Project Files
-config.py
 members.json
-!/config.py
+config.py
 
 # File for testing
-/test.py
+test.py
 
 # Environment Cache
 __pycache__/
