@@ -1,4 +1,0 @@
-REDDIT_CLIENT_ID = "zVCuWIk2bK0mIw"
-REDDIT_CLIENT_SECRET = "UoGoNb0j9Nccvs2nL30yHVb7JWUtDw"
-REDDIT_USER_AGENT = 'discord bot intergration by u/TitansXterminator'
-DISCORD_TOKEN = 'NzY5NDc2MTE2MzUyMDczNzM5.X5Pkeg.lMAeXF85Rin4nk9MyDviEBRPQMc'
