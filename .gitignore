@@ -1,0 +1,12 @@
+# Project Files
+config.py
+members.json
+
+# File for testing
+/test.py
+
+# Environment Cache
+__pycache__/
+.idea/
+.DS_Store
+Cogs/__pycache__/
