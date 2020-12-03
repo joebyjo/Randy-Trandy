@@ -1,6 +1,7 @@
 # Project Files
 config.py
 members.json
+!/config.py
 
 # File for testing
 /test.py
@@ -10,3 +11,4 @@ __pycache__/
 .idea/
 .DS_Store
 Cogs/__pycache__/
+
