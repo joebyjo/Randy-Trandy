@@ -51,11 +51,11 @@ async def clean_error(ctx, error):
         await ctx.send(Clean_error())
 
 
-@client.command(name='eval')
-async def _eval(ctx, *, cmd):
-    result = eval(cmd)
-
-    await ctx.send(f"{result}")
+# @client.command(name='eval')
+# async def _eval(ctx, *, cmd):
+#     result = eval(cmd)
+#
+#     await ctx.send(f"{result}")
 
 
 @client.command(name='run')
