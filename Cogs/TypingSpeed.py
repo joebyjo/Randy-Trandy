@@ -3,6 +3,8 @@ import asyncio
 import json
 
 
+# todo typing speed user_input ..... Message has .created_at
+
 class Typing(commands.Cog):
 
     def __init__(self, client):

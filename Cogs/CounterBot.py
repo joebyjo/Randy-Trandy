@@ -3,6 +3,9 @@ from discord.ext import commands
 from Messages_bot import *
 import json
 
+# todo bruh/lol bot.calculates how many bruh/lol u hve said
+# todo add bruh rights to the admin
+# todo bday bot
 
 class CounterBot(commands.Cog):
 

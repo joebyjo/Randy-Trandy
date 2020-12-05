@@ -7,18 +7,15 @@ from Cogs.TypingSpeed import *
 token = DISCORD_TOKEN
 client = commands.Bot(command_prefix='=')
 
-
+# todo use exit() to stop bot
 # todo use try except to error handle
 # todo roast bot(check dank memer)
-# todo typing speed user_input ..... Message has .created_at
 # todo timetable
 # todo battleship by sending messages to dms
-# todo bruh/lol bot.calculates how many bruh/lol u hve said
-# todo bday bot
 # todo get period
 # todo clean up eval function
 # todo watch live youtbe/twitch streams after joing a vc and the bot starts to stream
-# todo add bruh rights to the admin
+# todo discord play minecraft
 
 @client.event
 async def on_ready():
