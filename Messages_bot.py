@@ -10,13 +10,6 @@ def Command_doesnt_exist():
     return choices
 
 
-def Clean_error():
-    choices = choice(
-        ["Don't forget to specify the amount of messages to delete", 'you forgot the number of messages to delete',
-         'make sure all arguments are there'])
-    return choices
-
-
 def random_color():
     # 1000 possible colors
     colors = [0x45CF52, 0xCCB75F, 0x2DEBE9, 0xD61037, 0xF047F4, 0xB5FED0, 0x114AA4, 0x2E2CA8, 0x6A219B, 0x7B1FFB,

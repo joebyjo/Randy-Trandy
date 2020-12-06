@@ -2,9 +2,6 @@ import discord
 from discord.ext import commands
 import praw
 import random
-import sys
-import contextlib
-import io
 from config import *
 from Messages_bot import *
 
@@ -150,40 +147,6 @@ class Fun(commands.Cog):
         print('hello')
         await ctx.send(embed=emb)
 
-    @commands.command(name='dm')  # allows the user to send a dm to the mentioned user
-    async def direct_message(self, ctx, member: discord.Member, *, message):
-        await member.send(message)
-        await ctx.message.delete()
-
-
-    @commands.command()
-    async def eval(self, ctx, *, code: str):
-        try:
-            if code.startswith('```py') and code.endswith('```'):
-                code = code[5:-3]
-            elif code.startswith('`') and code.endswith('`'):
-                code = code[1:-1]
-
-            @contextlib.contextmanager
-            def evaluate(stdout=None):
-                old = sys.stdout
-                if stdout == None:
-                    sys.stdout = io.StringIO()
-                yield sys.stdout
-                sys.stdout = old
-
-            with evaluate() as e:
-                exec(code, {})
-            msg = await ctx.send('Evaluating...')
-            await msg.delete()
-            await ctx.send(f"{ctx.author.mention} Finished Evaluating!")
-            embed = discord.Embed(title=f'Results: \n', description=e.getvalue(),
-                                  color=discord.Colour.from_rgb(255, 221, 170))
-            await ctx.send(embed=embed)
-        except Exception as e:
-            embed = discord.Embed(title='Ran into a error while evaluating...')
-            embed.add_field(name='Error: ', value=str(e))
-            await ctx.send(embed=embed)
 
 def setup(client):
     client.add_cog(Fun(client))
