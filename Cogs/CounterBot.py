@@ -46,22 +46,23 @@ class CounterBot(commands.Cog):
 
     def check_member(self, member):
         users = self.get_member_details()
-        if str(member.id) in users:
+        if str(member.id) in users and not member.bot:
             return True
 
         else:
-            users[str(member.id)] = {}
-            users[str(member.id)]['username'] = str(member.name)
-            users[str(member.id)]['nickname'] = str(member.display_name)
-            users[str(member.id)]['joined discord'] = f"""{member.created_at.strftime("%H:%M %b-%d-%Y")}"""
-            users[str(member.id)]['joined server'] = f"{member.joined_at}"
-            users[str(member.id)]["bruh_count"] = 1
-            users[str(member.id)]["lol_count"] = 1
-            with open("members.json", 'w') as f:
-                json.dump(obj=users, fp=f, indent=4)
-            return True
+            if not member.bot:
+                users[str(member.id)] = {}
+                users[str(member.id)]['username'] = str(member.name)
+                users[str(member.id)]['nickname'] = str(member.display_name)
+                users[str(member.id)]['joined discord'] = f"""{member.created_at.strftime("%H:%M %b-%d-%Y")}"""
+                users[str(member.id)]['joined server'] = f"{member.joined_at}"
+                users[str(member.id)]["bruh_count"] = 1
+                users[str(member.id)]["lol_count"] = 1
+                with open("members.json", 'w') as f:
+                    json.dump(obj=users, fp=f, indent=4)
+                return True
 
-    def add_bruh(self, member, count=1):  # add bruh rights to the admin
+    def add_bruh(self, member, count: int = 1):  # add bruh rights to the admin
         users = self.get_member_details()
         if self.check_member(member):
             users[str(member.id)]["bruh_count"] += count

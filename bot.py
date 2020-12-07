@@ -5,7 +5,8 @@ from Messages_bot import *
 from Cogs.TypingSpeed import *
 
 token = DISCORD_TOKEN
-client = commands.Bot(command_prefix='=', owner_id=OWNER_ID)
+intents = discord.Intents().all()
+client = commands.Bot(command_prefix='=', owner_ids=OWNER_IDS, intents=intents)
 
 
 # todo discord plays minecraft. https://www.dougdougw.com/twitch-plays-code
@@ -34,6 +35,11 @@ async def on_ready():
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         await ctx.send(Command_doesnt_exist())
+    elif isinstance(error, commands.BadArgument):
+        await ctx.send(f"Error: ` {error} `")
+
+    else:
+        await ctx.send(f"Error: ` {error} `")
 
 
 client.run(token)

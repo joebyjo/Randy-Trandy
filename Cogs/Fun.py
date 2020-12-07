@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import praw
 import random
+import urbanasync
 from config import *
 from Messages_bot import *
 
@@ -16,16 +17,15 @@ class Fun(commands.Cog):
         self.client = client
 
     @commands.Cog.listener()
-    async def on_message(self, msg, min_upvotes: int = 2000):
-
+    async def on_message(self, msg, minimum_upvotes: int = 2000):
         if msg.content.startswith('r/') and not msg.author.bot:
             await msg.add_reaction("\N{THUMBS UP SIGN}")
             x = msg.content.split(" ")
             subreddit = x[0]
             subreddit = subreddit[2:]
             if len(x) > 1:
-                min_upvotes = int(x[1])
-            await self.memes(msg, sub=subreddit, min_ups=min_upvotes)
+                minimum_upvotes = int(x[1])
+            await self.memes(msg, sub=subreddit, min_ups=minimum_upvotes)
         # await client.process_commands(msg)
 
     @commands.command()
@@ -48,6 +48,11 @@ class Fun(commands.Cog):
                               color=color)  # ,colour='green'
         await ctx.send(embed=embed)
 
+    @ppsize.error
+    async def ppsize_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Don't forget to mentions someone")
+
     @commands.command()
     async def simprate(self, ctx, member: discord.Member = None):
         if not member:
@@ -58,11 +63,6 @@ class Fun(commands.Cog):
                               description=f"{member.display_name} is {simprate}% simp",
                               color=color)  # ,colour='green'
         await ctx.send(embed=embed)
-
-    @ppsize.error
-    async def ppsize_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Don't forget to mentions someone")
 
     @commands.command()
     async def memes(self, ctx, sub='memes', min_ups: int = 2000):
