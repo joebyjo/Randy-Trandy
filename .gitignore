@@ -10,4 +10,4 @@ __pycache__/
 .idea/
 .DS_Store
 Cogs/__pycache__/
-
+/venv/

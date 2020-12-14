@@ -7,6 +7,7 @@ import json
 # todo add bruh rights to the admin
 # todo bday bot
 
+
 class CounterBot(commands.Cog):
 
     def __init__(self, client):
@@ -38,7 +39,8 @@ class CounterBot(commands.Cog):
             em.add_field(name='Lol count', value=f'{lol_count}')
             await ctx.send(embed=em)
 
-    def get_member_details(self):
+    @staticmethod
+    def get_member_details():
         File = "members.json"
         with open(File, 'r') as f:
             users = json.load(f)

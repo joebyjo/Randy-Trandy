@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 import praw
 import random
-import urbanasync
 from config import *
 from Messages_bot import *
 

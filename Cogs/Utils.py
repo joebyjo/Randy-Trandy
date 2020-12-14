@@ -41,12 +41,12 @@ class Utils(commands.Cog):
             await ctx.send(Clean_error())
 
     @commands.command()
-    async def count(self, ctx, member: discord.Member = None, channel: discord.TextChannel = None):
+    async def count(self, ctx, member: discord.Member = None):
         await ctx.message.add_reaction("\N{THUMBS UP SIGN}")
         await ctx.send("This proccess may take a couple of Minutes depending on the number of messages sent")
         try:
             async with ctx.channel.typing():
-                channel = channel or ctx.channel
+                channel = ctx.channel
                 messages = await channel.history(limit=None).flatten()
                 count = 0
                 if member is not None:

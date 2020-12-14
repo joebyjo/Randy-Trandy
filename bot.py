@@ -10,14 +10,14 @@ client = commands.Bot(command_prefix='=', owner_ids=OWNER_IDS, intents=intents)
 
 
 # todo discord plays minecraft. https://www.dougdougw.com/twitch-plays-code
-# todo use exit() to stop bot
+# todo try to use exit() to stop bot
 # todo use try except to error handle
 # todo roast bot(check dank memer)
 # todo timetable
 # todo battleship by sending messages to dms
 # todo get period
 # todo clean up eval function
-# todo watch live youtbe/twitch streams after joing a vc and the bot starts to stream
+# todo watch live youtbe/twitch streams after joining a vc and the bot starts to stream
 # todo discord play minecraft
 
 @client.event
@@ -26,7 +26,7 @@ async def on_ready():
         if ext.endswith('.py'):  # makesure __pycache__ doesnt gets loaded
             ext = ext[:-3]  # removes the .py because listdir returns with the file extension
             print(ext)
-            client.load_extension(f'Cogs.{ext}')  # loads all the extensions in cogs folder
+            client.load_extension(f'Cogs.{ext}')  # loads all the extensions in the cogs folder
 
     await client.get_channel(BOT_CHANNEL).send('Bot is ready')  # BOT_CHANNEL is the id of the bot channel on my server
 
