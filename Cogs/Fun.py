@@ -11,26 +11,26 @@ r = praw.Reddit(client_id=REDDIT_CLIENT_ID,
                 user_agent=REDDIT_USER_AGENT)
 
 
+# todo https://some-random-api.ml/
+# todo Make the bot say whatever you want with sass!
+# todo See how dank you are, 100% official dank score
+# todo Hack your friends! Or your enemies...
+# todo See a random site from https://theuselessweb.com/
+# todo Answer some trivia for a chance to win some coins.
+
+def random_color():
+    # 1000 possible colors
+    with open('Cogs/colors.txt', 'r') as f:
+        color = int(choice(f.readlines()),16)
+    return color
+
 class Fun(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.Cog.listener()
-    async def on_message(self, msg, minimum_upvotes: int = 2000):
-        if msg.content.startswith('r/') and not msg.author.bot:
-            await msg.add_reaction("\N{THUMBS UP SIGN}")
-            x = msg.content.split(" ")
-            subreddit = x[0]
-            subreddit = subreddit[2:]
-            if len(x) > 1:
-                minimum_upvotes = int(x[1])
-            await self.memes(msg, sub=subreddit, min_ups=minimum_upvotes)
-        # await client.process_commands(msg)
-
     @commands.command()
     async def gayrate(self, ctx, member: discord.Member = None):
-        if not member:
-            member = ctx.author
+        member = member or ctx.author
         gayrate = random.randint(0, 100)
         color = random_color()
         embed = discord.Embed(title=f"How Gay are you?", description=f"{member.display_name} is {gayrate}% gay 🌈",
@@ -39,23 +39,17 @@ class Fun(commands.Cog):
 
     @commands.command(name='pp', aliases=['penis', 'pprate'])
     async def ppsize(self, ctx, member: discord.Member = None):
-        if not member:
-            member = ctx.author
+        member = member or ctx.author
         size = random.randint(0, 25)
         color = random_color()
         embed = discord.Embed(title=f"{member.display_name}'s pp size", description=f'''8{'=' * size}D''',
                               color=color)  # ,colour='green'
         await ctx.send(embed=embed)
 
-    @ppsize.error
-    async def ppsize_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Don't forget to mentions someone")
 
     @commands.command()
     async def simprate(self, ctx, member: discord.Member = None):
-        if not member:
-            member = ctx.author
+        member = member or ctx.author
         simprate = random.randint(0, 100)
         color = random_color()
         embed = discord.Embed(title=f"How much of a Simp are you?",
@@ -63,8 +57,30 @@ class Fun(commands.Cog):
                               color=color)  # ,colour='green'
         await ctx.send(embed=embed)
 
+    @commands.Cog.listener()
+    async def on_message(self, msg, minimum_upvotes: int = 0):
+        if msg.content.startswith('r/') and not msg.author.bot:
+            await msg.add_reaction("\N{THUMBS UP SIGN}")
+            x = msg.content.split(" ")
+            subreddit = x[0]
+            subreddit = subreddit[2:]
+            if len(x) > 1:
+                minimum_upvotes = int(x[1])
+            try:
+                await self.memes(msg, sub=subreddit, min_ups=minimum_upvotes)
+
+            except Exception as e:
+                await msg.channel.send(e)
+        # await client.process_commands(msg)
+
     @commands.command()
+    @commands.cooldown(rate=1, per=10.0)
+    @commands.max_concurrency(2)
     async def memes(self, ctx, sub='memes', min_ups: int = 2000):
+        def check_domain(url, blacklisted):
+            for words in blacklisted:
+                if words in url:
+                    return True
         in_sub = r.subreddit(sub).random()
         blacklisted = ['v.redd.it', 'youtube', 'redgifs']
         async with ctx.channel.typing():
@@ -131,20 +147,20 @@ class Fun(commands.Cog):
 
     @commands.command(hidden=True)
     async def timetable(self, ctx, section='10h'):
-        global emb
+        global embed
         if section.lower() == '10h':
             url = 'https://cdn.discordapp.com/attachments/757502326586998887/769467305460760576/ce6942ff-9758-4c3d-9cd'\
                   '6-e52f7abdd81b.png '
-            emb = discord.Embed(title=f'{section} Timetable ', color=random_color())
-            emb.set_image(url=url)
+            embed = discord.Embed(title=f'{section} Timetable ', color=random_color())
+            embed.set_image(url=url)
 
         elif section.lower() == '10g':
             url = 'https://cdn.discordapp.com/attachments/757502326586998887/769467305460760576/ce6942ff-9758-4c3d-9cd'\
                   '6-e52f7abdd81b.png '
-            emb = discord.Embed(title=f'{section} Timetable ', color=random_color())
-            emb.set_image(url=url)
+            embed = discord.Embed(title=f'{section} Timetable ', color=random_color())
+            embed.set_image(url=url)
         print('hello')
-        await ctx.send(embed=emb)
+        await ctx.send(embed=embed)
 
 
 def setup(client):

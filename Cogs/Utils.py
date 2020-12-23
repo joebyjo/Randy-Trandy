@@ -1,12 +1,15 @@
 import discord
 from discord.ext import commands
-import Messages_bot
-import random
+from Cogs.Fun import random_color
 import sys
 import contextlib
 import io
-from Cogs.CounterBot import CounterBot
 
+
+# todo checkuser
+# todo Visualize any hex or rgb color
+# todo Get an invite for the bot or to the support server. Also some extra links to use.
+# todo whitelist/black listed channels
 
 class Utils(commands.Cog):
 
@@ -24,26 +27,19 @@ class Utils(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(manage_channels=True)
-    async def clean(self, ctx, amount=0):  # deletes specified amount of messages
-        await ctx.channel.purge(limit=int(amount) + 1)
-        await ctx.send(f"` Deleted  {amount} messages `")
-
-    @clean.error
-    async def clean_error(self, ctx, error):
-        def Clean_error():
-            choices = random.choice(
-                ["Don't forget to specify the amount of messages to delete",
-                 'you forgot the number of messages to delete',
-                 'make sure all arguments are there'])
-            return choices
-
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send(Clean_error())
+    async def clean(self, ctx, amount: int = 0):  # deletes specified amount of messages
+        await ctx.message.delete()
+        await ctx.channel.purge(limit=amount)
+        await ctx.send(f"` Deleted {amount} messages `", delete_after=7.5)
 
     @commands.command()
+    @commands.check_any(commands.is_owner(), commands.has_permissions(administrator=True))
+    @commands.cooldown(rate=1, per=10.0)
+    @commands.max_concurrency(2)
     async def count(self, ctx, member: discord.Member = None):
         await ctx.message.add_reaction("\N{THUMBS UP SIGN}")
         await ctx.send("This proccess may take a couple of Minutes depending on the number of messages sent")
+
         try:
             async with ctx.channel.typing():
                 channel = ctx.channel
@@ -59,26 +55,10 @@ class Utils(commands.Cog):
                     description = f"There were `{count}` messages in {channel.mention}"
                 embed = discord.Embed(
                     title="Total Messages",
-                    colour=Messages_bot.random_color(),
+                    colour=random_color(),
                     description=description)
                 await ctx.send(embed=embed)
 
-        except Exception as e:
-            await ctx.send(e)
-
-    @commands.command(name='run')
-    @commands.is_owner()
-    async def __exec(self, ctx, *, msg):
-        if not isinstance(ctx.channel, discord.DMChannel):
-            await ctx.message.delete()
-        msg = msg.replace("“", "\"")
-        msg = msg.replace("‘", "'")
-        try:
-            exec(
-                f'async def __ex(ctx): ' +
-                ''.join(f'\n {line}' for line in msg.split('\n'))
-            )
-            return await locals()['__ex'](ctx)
         except Exception as e:
             await ctx.send(e)
 
@@ -111,59 +91,10 @@ class Utils(commands.Cog):
             embed.add_field(name='Error: ', value=str(e))
             await ctx.send(embed=embed)
 
-    @commands.command()
-    @commands.is_owner()
-    async def addguild(self, ctx):
 
-        for user in ctx.guild.members:
-            CounterBot(commands.Cog).check_member(user)
 
-        await ctx.message.add_reaction("\N{THUMBS UP SIGN}")
 
-    @commands.command()
-    @commands.is_owner()
-    async def addbruh(self, ctx, count: int = 1, member: discord.Member = None):
-        if not member:
-            member = ctx.author
-
-        CounterBot(commands.Cog).add_bruh(member=member, count=count)
-        await ctx.message.add_reaction("\N{THUMBS UP SIGN}")
-
-    @commands.command()
-    @commands.is_owner()
-    async def addlol(self, ctx, count: int = 1, member: discord.Member = None):
-        if not member:
-            member = ctx.author
-
-        CounterBot(commands.Cog).add_lol(member=member, count=count)
-        await ctx.message.add_reaction("\N{THUMBS UP SIGN}")
-
-    # @client.command(name='eval')
-    # async def _eval(ctx, *, cmd):
-    #     result = eval(cmd)
-    #
-    #     await ctx.send(f"{result}")
-
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def load(self, ctx, *, module: str):
-        try:
-            self.client.load_extension(module)
-        except commands.ExtensionError as e:
-            await ctx.send(f'{e.__class__.__name__}: {e}')
-        else:
-            await ctx.message.add_reaction("\N{THUMBS UP SIGN}")
-
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def unload(self, ctx, *, module: str):
-        try:
-            self.client.unload_extension(module)
-        except commands.ExtensionError as e:
-            await ctx.send(f'{e.__class__.__name__}: {e}')
-        else:
-            await ctx.message.add_reaction("\N{THUMBS UP SIGN}")
-
+#=run await ctx.send(str(await ctx.guild.system_channel.create_invite()))
 
 def setup(client):
     client.add_cog(Utils(client))
