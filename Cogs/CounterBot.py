@@ -21,15 +21,15 @@ class CounterBot(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, msg):
+        if not msg.author.bot:
+            try:
+                if 'bruh' in msg.content.lower():
+                    self.add_bruh(msg.author)
+                if 'lol' in msg.content.lower():
+                    self.add_lol(msg.author)
 
-        try:
-            if 'bruh' in msg.content.lower() and not msg.author.bot:
-                self.add_bruh(msg.author)
-            if 'lol' in msg.content.lower() and not msg.author.bot:
-                self.add_lol(msg.author)
-
-        except KeyError:
-            await msg.channel.send(f"{msg.author.mention} just said his first bruh/lol ")
+            except KeyError:
+                await msg.channel.send(f"{msg.author.mention} just said his first bruh/lol ")
 
     @commands.command()
     async def status(self, ctx, target: discord.Member = None):
@@ -84,13 +84,12 @@ class CounterBot(commands.Cog):
         else:
             if not member.bot:
                 users[str(member.guild.id)]['Members'][str(member.id)] = {}
-                users[str(member.guild.id)]['Members'][str(member.id)][
-                    'username'] = f"{member.name}#{member.discriminator} "
+                users[str(member.guild.id)]['Members'][str(member.id)]['username'] = f"{member.name}#{member.discriminator} "
                 users[str(member.guild.id)]['Members'][str(member.id)]['nickname'] = str(member.display_name)
                 users[str(member.guild.id)]['Members'][str(member.id)]['joined discord'] = f"""{member.created_at}"""
                 users[str(member.guild.id)]['Members'][str(member.id)]['joined server'] = f"{member.joined_at}"
-                users[str(member.guild.id)]['Members'][str(member.id)]["bruh_count"] += 1
-                users[str(member.guild.id)]['Members'][str(member.id)]["lol_count"] += 1
+                users[str(member.guild.id)]['Members'][str(member.id)]["bruh_count"] = 1
+                users[str(member.guild.id)]['Members'][str(member.id)]["lol_count"] = 1
                 with open("members.json", 'w') as f:
                     json.dump(obj=users, fp=f, indent=4)
                 return True

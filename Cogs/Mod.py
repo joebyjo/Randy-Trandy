@@ -1,9 +1,16 @@
+import asyncio
+import inspect
+import io
+import traceback
+from contextlib import redirect_stdout
+
 import discord
 from discord.ext import commands
 from Cogs.CounterBot import CounterBot
+from discord.ext.commands import HelpCommand
 import json
 from Cogs.Fun import random_color
-
+from discord.ext.buttons import Paginator
 
 class ModTools(commands.Cog):
 
@@ -100,9 +107,14 @@ class ModTools(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def test(self, ctx):
-        em = discord.Embed(title='test', color=random_color())
-        await ctx.send(embed=em)
-
+        # client = self.client
+        #
+        # em = discord.Embed(Title="Help")
+        #
+        # for command in client.commands:
+        #     em.add_field(name=command.name, value=f'{list(command.clean_params)}')
+        # await ctx.send(embed=em)
+        pass
 
 
 def setup(client):

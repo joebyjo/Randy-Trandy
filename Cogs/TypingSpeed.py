@@ -27,9 +27,7 @@ class Typing(commands.Cog):
 
         # todo have to find a way to account for client latency
 
-
-        timetaken = int(user_input.created_at.strftime('%-S')) - int(ctx.message.created_at.strftime('%-S'))  # '%f'
-
+        timetaken = round((user_input.created_at - ctx.message.created_at).total_seconds())
 
         await ctx.send(timetaken)
 

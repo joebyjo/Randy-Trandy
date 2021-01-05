@@ -12,6 +12,8 @@ r = praw.Reddit(client_id=REDDIT_CLIENT_ID,
 
 
 # todo https://some-random-api.ml/
+# todo Snipe command
+# todo https://rickandmortyapi.com/ ............. https://github.com/curiousrohan/ramapi
 # todo Make the bot say whatever you want with sass!
 # todo See how dank you are, 100% official dank score
 # todo Hack your friends! Or your enemies...
@@ -46,16 +48,25 @@ class Fun(commands.Cog):
                               color=color)  # ,colour='green'
         await ctx.send(embed=embed)
 
-
     @commands.command()
     async def simprate(self, ctx, member: discord.Member = None):
         member = member or ctx.author
         simprate = random.randint(0, 100)
         color = random_color()
-        embed = discord.Embed(title=f"How much of a Simp are you?",
+        embed = discord.Embed(title=f"Simp Rate",
                               description=f"{member.display_name} is {simprate}% simp",
                               color=color)  # ,colour='green'
         await ctx.send(embed=embed)
+
+    @commands.command()
+    async def lenny(self, ctx):
+        """Displays a random lenny face."""
+        lenny = choice([
+            "( ͡° ͜ʖ ͡°)", "( ͠° ͟ʖ ͡°)", "ᕦ( ͡° ͜ʖ ͡°)ᕤ", "( ͡~ ͜ʖ ͡°)",
+            "( ͡o ͜ʖ ͡o)", "͡(° ͜ʖ ͡ -)", "( ͡͡ ° ͜ ʖ ͡ °)", "(ง ͠° ͟ل͜ ͡°)ง",
+            "ヽ༼ຈل͜ຈ༽ﾉ"
+        ])
+        await ctx.send(lenny)
 
     @commands.Cog.listener()
     async def on_message(self, msg, minimum_upvotes: int = 0):
@@ -144,24 +155,6 @@ class Fun(commands.Cog):
 
         final = ''.join(converted)
         await ctx.send(final)
-
-    @commands.command(hidden=True)
-    async def timetable(self, ctx, section='10h'):
-        global embed
-        if section.lower() == '10h':
-            url = 'https://cdn.discordapp.com/attachments/757502326586998887/769467305460760576/ce6942ff-9758-4c3d-9cd'\
-                  '6-e52f7abdd81b.png '
-            embed = discord.Embed(title=f'{section} Timetable ', color=random_color())
-            embed.set_image(url=url)
-
-        elif section.lower() == '10g':
-            url = 'https://cdn.discordapp.com/attachments/757502326586998887/769467305460760576/ce6942ff-9758-4c3d-9cd'\
-                  '6-e52f7abdd81b.png '
-            embed = discord.Embed(title=f'{section} Timetable ', color=random_color())
-            embed.set_image(url=url)
-        print('hello')
-        await ctx.send(embed=embed)
-
 
 def setup(client):
     client.add_cog(Fun(client))
