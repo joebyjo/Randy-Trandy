@@ -9,8 +9,9 @@ from discord.ext import commands
 from Cogs.CounterBot import CounterBot
 from discord.ext.commands import HelpCommand
 import json
-from Cogs.Fun import random_color
 from discord.ext.buttons import Paginator
+from discord.colour import Colour
+
 
 class ModTools(commands.Cog):
 
@@ -103,6 +104,7 @@ class ModTools(commands.Cog):
     async def close(self, ctx):
         await self.client.close()
         await ctx.message.add_reaction("\N{THUMBS UP SIGN}")
+
 
     @commands.command()
     @commands.is_owner()

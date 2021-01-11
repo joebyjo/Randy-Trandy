@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
 import asyncio
-from Cogs.Fun import random_color
 import json
+from discord.colour import Colour
 
 BOT_DEFAULT_PREFIX = '='
 
@@ -41,7 +41,7 @@ class CounterBot(commands.Cog):
             bruh_count = member[str(ctx.guild.id)]['Members'][str(target.id)]['bruh_count']
             lol_count = member[str(ctx.guild.id)]['Members'][str(target.id)]['lol_count']
 
-            em = discord.Embed(title=f"{target.display_name}'s bruh count", colour=random_color())
+            em = discord.Embed(title=f"{target.display_name}'s bruh count", colour=Colour.random())
             em.add_field(name='Bruh count', value=f'{bruh_count}')
             em.add_field(name='Lol count', value=f'{lol_count}')
             await ctx.send(embed=em)

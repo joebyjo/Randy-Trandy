@@ -4,9 +4,12 @@ import os
 from config import *
 from Messages_bot import *
 from Cogs.CounterBot import CounterBot
+from discord.colour import Colour
 
 BOT_DEFAULT_PREFIX = '='
 token = DISCORD_TOKEN
+
+
 
 
 def get_prefix(client, msg):

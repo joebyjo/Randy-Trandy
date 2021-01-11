@@ -1,8 +1,7 @@
 import discord
-from Cogs.Utils import random_color
 from discord.ext import commands
 from discord.ext.buttons import Paginator
-
+from discord.colour import Colour
 
 # class Help(commands.MinimalHelpCommand):
 #
@@ -103,7 +102,7 @@ class Help(commands.Cog):
 
 
 
-        await Pag(title=title, color=random_color(), entries=pages, length=1).start(ctx)
+        await Pag(title=title, color=Colour.random(), entries=pages, length=1).start(ctx)
 
     @commands.command(name="help", description="This help command!")
     async def help_command(self, ctx, *, entity=None):

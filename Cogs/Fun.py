@@ -4,7 +4,7 @@ import praw
 import random
 from config import *
 from Messages_bot import *
-
+from discord.colour import Colour
 
 r = praw.Reddit(client_id=REDDIT_CLIENT_ID,
                 client_secret=REDDIT_CLIENT_SECRET,
@@ -20,11 +20,6 @@ r = praw.Reddit(client_id=REDDIT_CLIENT_ID,
 # todo See a random site from https://theuselessweb.com/
 # todo Answer some trivia for a chance to win some coins.
 
-def random_color():
-    # 1000 possible colors
-    with open('Cogs/colors.txt', 'r') as f:
-        color = int(choice(f.readlines()),16)
-    return color
 
 class Fun(commands.Cog):
     def __init__(self, client):
@@ -34,7 +29,7 @@ class Fun(commands.Cog):
     async def gayrate(self, ctx, member: discord.Member = None):
         member = member or ctx.author
         gayrate = random.randint(0, 100)
-        color = random_color()
+        color = Colour.random()
         embed = discord.Embed(title=f"How Gay are you?", description=f"{member.display_name} is {gayrate}% gay 🌈",
                               color=color)  # ,colour='green'
         await ctx.send(embed=embed)
@@ -43,7 +38,7 @@ class Fun(commands.Cog):
     async def ppsize(self, ctx, member: discord.Member = None):
         member = member or ctx.author
         size = random.randint(0, 25)
-        color = random_color()
+        color = Colour.random()
         embed = discord.Embed(title=f"{member.display_name}'s pp size", description=f'''8{'=' * size}D''',
                               color=color)  # ,colour='green'
         await ctx.send(embed=embed)
@@ -52,7 +47,7 @@ class Fun(commands.Cog):
     async def simprate(self, ctx, member: discord.Member = None):
         member = member or ctx.author
         simprate = random.randint(0, 100)
-        color = random_color()
+        color = Colour.random()
         embed = discord.Embed(title=f"Simp Rate",
                               description=f"{member.display_name} is {simprate}% simp",
                               color=color)  # ,colour='green'
@@ -106,7 +101,7 @@ class Fun(commands.Cog):
                 embed = discord.Embed(title=title,
                                       description=f"<:upvote:772042657316864040>{upvotes}  💬{in_sub.num_comments}",
                                       url=url,
-                                      color=random_color())
+                                      color=Colour.random())
                 embed.set_image(url=pic_link)
                 embed.set_author(name=f"u/{author}", url=f'https://www.reddit.com/user/{author}/',
                                  icon_url='https://i.redd.it/snoovatar/snoovatars/d53ac490-6219-4e83-8115'
@@ -127,7 +122,7 @@ class Fun(commands.Cog):
                 embed = discord.Embed(title=title,
                                       description=f"<:upvote:772042657316864040>{upvotes}  💬{in_sub.num_comments}",
                                       url=url,
-                                      color=random_color())
+                                      color=Colour.random())
                 # emb.set_image(url=pic_link)
                 embed.set_author(name=f"u/{author}", url=f'https://www.reddit.com/user/{author}/',
                                  icon_url='https://i.redd.it/snoovatar/snoovatars/d53ac490-6219-4e83-8115'

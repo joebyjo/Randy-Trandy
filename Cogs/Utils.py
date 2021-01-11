@@ -1,10 +1,9 @@
 import discord
 from discord.ext import commands
-from Cogs.Fun import random_color
 import sys
 import contextlib
 import io
-
+from discord.colour import Colour
 
 # todo checkuser
 # todo Visualize any hex or rgb color
@@ -55,7 +54,7 @@ class Utils(commands.Cog):
                     description = f"There were `{count}` messages in {channel.mention}"
                 embed = discord.Embed(
                     title="Total Messages",
-                    colour=random_color(),
+                    colour=Colour.random(),
                     description=description)
                 await ctx.send(embed=embed)
 
