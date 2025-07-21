@@ -100,8 +100,6 @@ class Help(commands.Cog):
             for command in self.client.get_cog(cogg).get_commands():
                 print(command)
 
-
-
         await Pag(title=title, color=Colour.random(), entries=pages, length=1).start(ctx)
 
     @commands.command(name="help", description="This help command!")
@@ -115,6 +113,7 @@ class Help(commands.Cog):
                 await self.setup_help_pag(ctx, cog, f"{cog.qualified_name}'s commands")
 
             else:
+
                 command = self.client.get_command(entity)
                 if command:
                     await self.setup_help_pag(ctx, command, command.name)
@@ -122,6 +121,7 @@ class Help(commands.Cog):
                 else:
                     await ctx.send("Entity not found.")
 
+# ------------------------------------------ Load Cog ------------------------------------------ #
 
 def setup(client):
     client.add_cog(Help(client))

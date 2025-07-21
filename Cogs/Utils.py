@@ -1,9 +1,9 @@
 import discord
 from discord.ext import commands
-import sys
-import contextlib
-import io
+from json import loads
+from Cogs.CounterBot import *
 from discord.colour import Colour
+
 
 # todo checkuser
 # todo Visualize any hex or rgb color
@@ -31,6 +31,35 @@ class Utils(commands.Cog):
         await ctx.channel.purge(limit=amount)
         await ctx.send(f"` Deleted {amount} messages `", delete_after=7.5)
 
+    # @commands.command()
+    # @commands.check_any(commands.is_owner(), commands.has_permissions(administrator=True))
+    # @commands.cooldown(rate=1, per=10.0)
+    # @commands.max_concurrency(2)
+    # async def count(self, ctx, member: discord.Member = None):
+    #     await ctx.message.add_reaction("\N{THUMBS UP SIGN}")
+    #     await ctx.send("This proccess may take a couple of Minutes depending on the number of messages sent")
+    #     try:
+    #         async with ctx.channel.typing():
+    #             channel = ctx.channel
+    #             messages = await channel.history(limit=None).flatten()
+    #             count = 0
+    #             if member is not None:
+    #                 for message in messages:
+    #                     if message.author == member:
+    #                         count += 1
+    #                 description = f"{member.mention} sent `{count}` messages in {channel.mention}"
+    #             else:
+    #                 count = len(messages)
+    #                 description = f"There were `{count}` messages in {channel.mention}"
+    #             embed = discord.Embed(
+    #                 title="Total Messages",
+    #                 colour=Colour.random(),
+    #                 description=description)
+    #             await ctx.send(embed=embed)
+    #
+    #     except Exception as e:
+    #         await ctx.send(e)
+
     @commands.command()
     @commands.check_any(commands.is_owner(), commands.has_permissions(administrator=True))
     @commands.cooldown(rate=1, per=10.0)
@@ -38,7 +67,6 @@ class Utils(commands.Cog):
     async def count(self, ctx, member: discord.Member = None):
         await ctx.message.add_reaction("\N{THUMBS UP SIGN}")
         await ctx.send("This proccess may take a couple of Minutes depending on the number of messages sent")
-
         try:
             async with ctx.channel.typing():
                 channel = ctx.channel
@@ -62,38 +90,79 @@ class Utils(commands.Cog):
             await ctx.send(e)
 
     @commands.command()
-    async def eval(self, ctx, *, code: str):
-        try:
-            if code.startswith('```py') and code.endswith('```'):
-                code = code[5:-3]
-            elif code.startswith('`') and code.endswith('`'):
-                code = code[1:-1]
+    async def colorviewer(self, ctx, color: str):
+        def clean_color(clr: str):
+            if clr.startswith("#"):
+                return clr[1:]
+            else:
+                return clr
 
-            @contextlib.contextmanager
-            def evaluate(stdout=None):
-                old = sys.stdout
-                if stdout is None:
-                    sys.stdout = io.StringIO()
-                yield sys.stdout
-                sys.stdout = old
+        color = clean_color(color)
+        payload = {'hex': color}
+        async with self.client.session.get('https://some-random-api.ml/canvas/colorviewer',
+                                           params=payload) as req:
+            emb = discord.Embed(title=f"#{color.upper()}", color=int(color, 16))
+            emb.set_image(url=req.url)
+            await ctx.send(embed=emb)
 
-            with evaluate() as e:
-                exec(code, {})
-            msg = await ctx.send('Evaluating...')
-            await msg.delete()
-            await ctx.send(f"{ctx.author.mention} Finished Evaluating!")
-            embed = discord.Embed(title=f'Results: \n', description=e.getvalue(),
-                                  color=discord.Colour.from_rgb(255, 221, 170))
-            await ctx.send(embed=embed)
-        except Exception as e:
-            embed = discord.Embed(title='Ran into a error while evaluating...')
-            embed.add_field(name='Error: ', value=str(e))
-            await ctx.send(embed=embed)
+    @commands.command(aliases=['b64'])
+    async def base64(self, ctx, *, string: str):
+        type = ''
+        msg = ''
+        await ctx.message.delete()
+        if string.endswith('='):
+            type = 'decode'
+            async with self.client.session.get(f'https://some-random-api.ml/base64?decode={string}') as req:
+                req = loads(await req.read())
+                msg = req['text']
+
+        else:
+            type = 'encode'
+            async with self.client.session.get(f'https://some-random-api.ml/base64?encode={string}') as req:
+                req = loads(await req.read())
+                msg = req['base64']
+
+        embed = discord.Embed(title=f"{type}d message", description=(f"`{msg}`"), colour=Colour.random())
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def binary(self, ctx, *, string: str):
+        type = ''
+        msg = ''
+        await ctx.message.delete()
+        if '1' and '0' in string:
+            type = 'decode'
+            async with self.client.session.get(f'https://some-random-api.ml/binary?decode={string}') as req:
+                req = loads(await req.read())
+                msg = req['text']
+
+        else:
+            type = 'encode'
+            async with self.client.session.get(f'https://some-random-api.ml/binary?text={string}') as req:
+                req = loads(await req.read())
+                msg = req['binary']
+
+        embed = discord.Embed(title=f"{type}d message", description=(f"`{msg}`"), colour=Colour.random())
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def status(self, ctx, target: discord.Member = None):
+        """     sends the member's "lol" and "bruh" count"""
+        target = target or ctx.author
+
+        if CounterBot(commands.Cog).check_member(target):
+            member = CounterBot(commands.Cog).open_json()
+
+            bruh_count = member[str(ctx.guild.id)]['Members'][str(target.id)]['bruh_count']
+            lol_count = member[str(ctx.guild.id)]['Members'][str(target.id)]['lol_count']
+
+            em = discord.Embed(title=f"{target.display_name}'s bruh count", colour=Colour.random())
+            em.add_field(name='Bruh count', value=f'{bruh_count}')
+            em.add_field(name='Lol count', value=f'{lol_count}')
+            await ctx.send(embed=em)
 
 
-
-
-#=run await ctx.send(str(await ctx.guild.system_channel.create_invite()))
+# ------------------------------------------ Load Cog ------------------------------------------ #
 
 def setup(client):
     client.add_cog(Utils(client))

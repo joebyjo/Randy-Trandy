@@ -20,7 +20,7 @@ class DiscordPlays(commands.Cog):
         kb.press(Key)
 
 
-
+# ------------------------------------------ Load Cog ------------------------------------------ #
 
 def setup(client):
     client.add_cog(DiscordPlays(client))
